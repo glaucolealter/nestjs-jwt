@@ -1,16 +1,19 @@
 import {
   Body,
+  CacheTTL,
   Controller,
   Delete,
   Get,
   Param,
   Post,
   Put,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
 import { CriaUsuarioDTO } from './dto/CriaUsuario.dto';
 import { ListaUsuarioDTO } from './dto/ListaUsuario.dto';
 import { UsuarioService } from './usuario.service';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('/usuarios')
 export class UsuarioController {
@@ -27,8 +30,12 @@ export class UsuarioController {
   }
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(15 * 60 * 1000)
   async listUsuarios() {
     const usuariosSalvos = await this.usuarioService.listUsuarios();
+
+    console.log('Todos os usuários recuperados do banco de dados');
 
     return {
       mensagem: 'Usuários obtidos com sucesso.',
