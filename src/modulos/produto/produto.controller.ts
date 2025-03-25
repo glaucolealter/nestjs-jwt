@@ -33,14 +33,12 @@ export class ProdutoController {
   @Get()
   @UseInterceptors(CacheInterceptor)
   async listaTodos() {
-    console.log('Todos os produtos recuperados do banco de dados');
     return this.produtoService.listaProdutos();
   }
 
   @Get('/:id')
   @UseInterceptors(CacheInterceptor)
   async listaUm(@Param('id') id: string) {
-    console.log(`Produto ${id} recuperado do banco de dados`);
     const produtoSalvo = await this.produtoService.listaUmProduto(id);
 
     return produtoSalvo;
